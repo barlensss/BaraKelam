@@ -38,7 +38,7 @@ Ikuti langkah-langkah berikut untuk menginstal dan menjalankan tools ini di ling
 1. **Clone Repository**
    ```bash
    git clone https://github.com/barlensss/BaraKelam.git
-   cd BARA-LUV-ELIA
+   cd BaraKelam
    ```
 
 2. **Install Dependencies**
@@ -66,7 +66,7 @@ Bagi pengguna Android, Anda dapat menjalankan tools ini menggunakan emulator ter
 2. **Clone Repository**
    ```bash
    git clone  https://github.com/barlensss/BaraKelam.git
-   cd BARA-LUV-ELIA
+   cd BaraKelam
    ```
 
 3. **Install Dependencies**
