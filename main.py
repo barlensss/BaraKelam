@@ -137,7 +137,7 @@ class MatrixBackground:
         
         sys.stdout.write('\033[?25h')
 
-def matrix_loading(duration=3):
+def matrix_loading(duration=9):
     matrix = MatrixBackground()
     
     ascii_arlen = [
