@@ -1,91 +1,10 @@
-import re
-import uuid
-import random
-import string
-import urllib.parse
-import requests
 
-from useragents import USER_AGENTS
-
-def normalize(phone):
-    """Normalisasi nomor telepon ke format 62"""
-    n = phone.strip().replace(' ', '').replace('-', '').replace('+', '')
-    if n.startswith('08'):
-        return '62' + n[1:]
-    if n.startswith('8'):
-        return '62' + n
-    if n.startswith('62'):
-        return n
-    return ''
-
-def fmt_08(p):
-    """Format ke 08"""
-    return '0' + p[2:] if p.startswith('62') else p
-
-def fmt_nocode(p):
-    """Format tanpa kode negara"""
-    return p[2:] if p.startswith('62') else p
-
-def fmt_plus(p):
-    """Format ke +62"""
-    return '+' + p if not p.startswith('+') else p
-
-def fmt_phone_only(p):
-    """Format nomor saja tanpa kode"""
-    if p.startswith('62'):
-        return p[2:]
-    if p.startswith('+62'):
-        return p[3:]
-    if p.startswith('0'):
-        return p[1:]
-    return p
-
-def get_public_ip():
-    """Mendapatkan IP publik"""
-    try:
-        return requests.get('https://api.ipify.org', timeout=5).text.strip()
-    except:
-        return '127.0.0.1'
-
-def extract_csrf(html):
-    """Ekstrak CSRF token dari HTML"""
-    patterns = [
-        r'<meta name="csrf-token" content="([^"]+)"',
-        r'<meta name="csrf_token" content="([^"]+)"',
-        r'<input type="hidden" name="_token" value="([^"]+)"',
-        r'<input type="hidden" name="csrf_token" value="([^"]+)"',
-        r'<input type="hidden" name="_csrf" value="([^"]+)"',
-        r'csrf_token\s*=\s*"([^"]+)"',
-    ]
-    for p in patterns:
-        m = re.search(p, html, re.I)
-        if m:
-            return m.group(1)
-    return None
-
-def generate_multipart(data, boundary):
-    """Generate multipart form data"""
-    body = ""
-    for key, val in data.items():
-        body += f"--{boundary}\r\n"
-        body += f'Content-Disposition: form-data; name="{key}"\r\n\r\n'
-        body += f"{val}\r\n"
-    body += f"--{boundary}--\r\n"
-    return body
-
-def get_random_user_agent():
-    """Dapatkan user agent random"""
-    return random.choice(USER_AGENTS)
-
-def get_headers_with_random_ua(custom_headers=None):
-    """Dapatkan headers dengan user agent random"""
-    headers = {
-        'User-Agent': get_random_user_agent(),
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-        'Accept-Language': 'id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7',
-        'Accept-Encoding': 'gzip, deflate, br, zstd',
-        'Connection': 'keep-alive',
-    }
-    if custom_headers:
-        headers.update(custom_headers)
-    return headers
+_M=["AURELIA","AURELIA💖","AURELIA🔥","AURELIA炎","AURELIA火","AURELIAア","AURELIA日本","AURELIA火炎","AURELIA燚","AURELIA焔","AURELIABARA","AURELIA火BARA","AURELIA💖BARA","AURELIA🔥BARA","AURELIA炎BARA","AURELIAさん","AURELIAちゃん","AURELIA様","AURELIA姫","AURELIA王","AURELIA女王","AURELIA天使","AURELIA女神","AURELIA光","AURELIA輝","AURELIA耀","AURELIA照","AURELIA燦","AURELIA爛","AURELIA🌹","AURELIA👑","BARA","BARA🔥","BARA💖","BARA炎","BARA火","BARAア","BARA日本","BARA火炎","BARA燚","BARA焔","BARAAURELIA","BARA火AURELIA","BARA💖AURELIA","BARA🔥AURELIA","BARA炎AURELIA","BARAさん","BARAちゃん","BARA様","BARA姫","BARA王","BARA炎帝","BARA火神","BARA天使","BARA女神","BARA光","BARA輝","BARA耀","BARA照","BARA燦","BARA🌹","BARA👑","QONITA","QONITA💖","QONITA🔥","QONITA炎","QONITA火","QONITAAURELIA","QONITABARA","QONITA💖AURELIA","QONITA🔥BARA","QONITAさん","QONITAちゃん","QONITA様","QONITA姫","QONITA天使","QONITA🌹","QONITA👑","QONITA輝","QONITA耀","BARA QONITA","AURELIA QONITA","BARA💖QONITA","AURELIA💖QONITA","BARA🔥QONITA","BARA火QONITA","AURELIA炎QONITA","QONITABARA💖","QONITAAURELIA🔥","QONITABARA火","QONITAAURELIA💖","QONITABARA🔥","あ","い","う","え","お","か","き","く","け","こ","さ","し","す","せ","そ","た","ち","つ","て","と","な","に","ぬ","ね","の","は","ひ","ふ","へ","ほ","ま","み","む","め","も","や","ゆ","よ","ら","り","る","れ","ろ","わ","を","ん","が","ぎ","ぐ","げ","ご","ざ","じ","ず","ぜ","ぞ","だ","ぢ","づ","で","ど","ば","び","ぶ","ア","イ","ウ","エ","オ","カ","キ","ク","ケ","コ","サ","シ","ス","セ","ソ","タ","チ","ツ","テ","ト","ナ","ニ","ヌ","ネ","ノ","ハ","ヒ","フ","ヘ","ホ","マ","ミ","ム","メ","モ","ヤ","ユ","ヨ","ラ","リ","ル","レ","ロ","ワ","ヲ","ン","ガ","ギ","グ","ゲ","ゴ","ザ","ジ","ズ","ゼ","ゾ","ダ","ヂ","ヅ","デ","ド","バ","ビ","ブ","火","炎","焱","燚","轟","烈","燃","焼","爆","熱","灼","焦","焔","燈","燦","爛","輝","耀","照","燿","爍","烱","炳","煜","煬","熈","熊","熏","燻","爨","爩","燁","BARA💖AURELIA","AURELIA🔥BARA","BARA火AURELIA炎","AURELIA💖BARA🔥"]
+_A="""BARA💖AURELIABARA🔥AURELIABARA炎BARAさん爍クネキかBARA燚BARA光QONITA耀BARA日本BARAアBARA姫爍ケコで焦ゆエ焦らテ焦れる焦ろトAURELIA天使BARA天使QONITA💖AURELIABARA燚BARAアBARAアBARAさんBARA💖QONITABARA天使はBARA🔥BARAアBARA炎BARA炎AURELIABARAさんAURELIA様QONITAちゃんBARA焔QONITA💖BARA姫爍ケコで焦ゆエ焦らテ焦れら焦ろテAURELIA炎BARABARA輝BARA💖BARAAURELIAQONITAAURELIABARA👑BARA🔥AURELIABARA QONITABARAさんBARA燚BARA火炎こBARA耀BARA燦BARA炎AURELIAAURELIAちゃんBARA💖AURELIABARA火むBARA姫爍シりケBARA王BARA様QONITAAURELIA🔥BARA🔥AURELIABARA💖BARA耀BARAさん爍クハず焦よぎ焦りム焦れだ焦ろタBARA光BARAアBARA💖BARA天使爍クキアQONITA天使BARA炎帝BARA🔥BARA火AURELIABARA💖せBARA火神爍クコゆ焦ゆば焦りト焦れづ焦ろヤAURELIA姫BARA日本BARA🌹てBARA🔥BARA耀BARA姫QONITA耀BARA炎帝BARA💖ぬAURELIAちゃんBARAAURELIA💖BARAAURELIA王BARA火AURELIA炎AURELIA日本AURELIA光AURELIAさん爍ソぢヒ焦よカ焦らる焦れぢ焦ろヤAURELIA照にBARA💖BARA💖BARA燦BARA耀BARA🔥QONITA🌹BARA焔BARAちゃんBARA光つBARA🌹BARA💖BARAさんAURELIA姫BARA燚すすQONITA天使爍でぜヒかはなしてAURELIA火炎BARAさん爍クハを焦ゆが焦りキ焦れど焦ろセBARA火BARA王BARA燦か爍ケネホBARA🔥AURELIABARA照BARA🔥こBARA輝BARA🔥AURELIABARA炎AURELIA爍サれぢ焦ゆる焦りオ焦るず焦ろニAURELIA耀にBARAAURELIABARA💖BARA燦BARA耀BARA🔥BARA🔥QONITAかくおしてたQONITA天使あきかぬBARAちゃん爍でだど焦よぎ焦りモ焦れば焦ろハAURELIA姫BARA火神かBARA👑BARA👑BARA火炎BARA焔BARA QONITAせむむBARA光BARAAURELIABARA耀BARA炎AURELIAAURELIA🌹BARA💖BARAアまさ爍でぜニつははきこしBARA炎帝爍サれぢ焦ゆわ焦りト焦れぜ焦ろヤそさやさ爍だぜヒさぬみたQONITABARA🔥AURELIABARA姫爍ケぢる焦ゆを焦りタ焦るば焦わメQONITABARA💖ひくててねすBARA火AURELIAかはぬこBARA日本BARAちゃんかAURELIA姫ちBARA王BARA火炎BARA🔥爍クハず焦ゆど焦りホ焦れど焦ろテAURELIA女王ほすもにねすAURELIA照QONITA天使はぬこちせかあきBARA炎帝BARA光BARA天使爍キりケBARAちゃんははねもてか爍ぢケれ焦ゆれ焦りぢ焦るゆ焦わオBARAQONITA天使ぬか爍でぜヒBARA焔BARA炎帝ぬBARA💖AURELIAきBARA照BARA天使爍シれで焦ゆエ焦りメ焦れろ焦ろネAURELIA燚BARA耀しせにねすAURELIA照QONITA天使はぬこちせかあきBARA炎帝BARA光BARA天使爍キれで焦ゆれ焦らテ焦るづ焦わチQONITA輝ひとこせBARA照QONITA天使AURELIAかはぬBARA🔥AURELIABARA火AURELIAせBARAちゃんBARA💖QONITABARA姫BARA天使BARA炎帝BARA炎帝爍キぞコBARA女神BARA🌹BARA火炎BARA炎AURELIAけてふ爍ぞノら焦よら焦らノ焦るミ焦わマきかぬか爍でぜヒかBARA燚BARA光BARA姫BARA耀BARA燦BARAちゃん爍でぢぎ焦よカ焦らテ焦るず焦わマあBARA火BARA火AURELIABARA照BARA🌹BARA火炎BARAちゃんAURELIAさぬQONITAAURELIA🔥QONITA耀BARA焔BARA🔥AURELIABARA燚あBARAアBARA🔥AURELIABARA火炎AURELIA👑爍ぞだイ焦より焦りモ焦るど焦わオひにとてせひくAURELIA🔥AURELIA火炎BARA照BARA🔥BARA焔BARA炎AURELIABARA👑かAURELIA光BARA燚かきほ爍でヌノくえぬこちせBARA炎帝爍サれず焦ゆウ焦りム焦れエ焦わマこにはか爍ぢキヒBARA姫AURELIA炎BARAおやAURELIA様せBARA焔爍サノれ焦ゆぶ焦らオ焦れら焦ろテAURELIA🌹BARA火BARA燦BARA👑QONITABARA👑BARA天使QONITAちゃんせぬけふたおかAURELIA耀BARAさんBARA王BARA光か爍クだト焦よカ焦りソ焦れだ焦ろムあBARA光BARA炎BARA照AURELIA女神BARA照BARAさんQONITAAURELIABARAさんBARA姫BARA光つBARA🌹おみひきかぬか爍でヌノくAURELIA王BARA👑BARA光BARA💖BARA焔BARA天使爍でぢず焦ゆが焦りオ焦れよ焦ろミきBARA火AURELIABARA👑BARA日本爍サらヒBARAちゃんBARA様BARA天使BARAアQONITABARA焔く爍でノわ焦よカ焦らテ焦るず焦わマあBARA火BARA火AURELIABARA照BARA🌹BARA火炎BARAちゃんAURELIABARA姫AURELIA炎BARAおやAURELIA様せBARA焔AURELIA照きBARA姫むBARA王爍キぢる焦ゆば焦りマ焦れら焦ろツAURELIA天使BARA日本BARA燚さてきねAURELIA火炎すはBARA光BARAAURELIAQONITA💖BARA🔥AURELIAかAURELIA💖BARAQONITAちゃんQONITA天使BARA女神BARAア爍サヌヒBARA燚BARA輝BARA火炎AURELIA照BARA🌹BARA日本BARA火神爍クケげ焦ゆぶ焦らシ焦るぎ焦わじきかぬか爍でヌノくAURELIA王BARA👑BARA光BARA💖BARA焔BARA天使爍でぢご焦ゆご焦らテ焦るび焦わチQONITA輝ねつちQONITAAURELIAのかAURELIAかBARA燚BARA光BARA姫BARA耀BARA燦BARAちゃんあこそはか爍ぢケれ焦ゆぶ焦らテ焦れど焦ろムあQONITA💖BARA🔥BARA照せBARAアとAURELIA💖QONITABARA天使BARA火神BARA🔥BARA姫QONITA💖QONITABARA焔AURELIA燚BARA火AURELIAせはそ爍づキヤかBARA様QONITABARA女神BARAAURELIAせBARA姫爍イノト焦ゆざ焦りタ焦れで焦わマBARAアBARA🔥AURELIABARA火炎AURELIA👑爍クぞモBARAさんBARA燦BARA光AURELIA照BARA火BARA燚BARA炎AURELIA爍カるげ焦ゆぶ焦らシ焦るぎ焦わじあにとてたひくさBARAさんBARA燚QONITA💖BARAアBARA輝せBARAちゃんAURELIA王BARAちゃんBARAさんBARA🔥か爍クコる焦ゆよ焦りト焦るず焦ろテAURELIA🌹QONITA💖QONITA💖BARAちゃんせQONITA💖BARAさんQONITABARABARAアふなしQONITA🔥BARAせかあきBARA焔BARA火神か爍クぜヘBARA王BARA💖BARA炎帝BARA光BARA輝BARA照BARA女神爍コれず焦ゆり焦らサ焦るづ焦わチなさみみ爍イヌヒかはぬこちせか爍クハゆ焦ゆエ焦りミ焦れり焦ろノあBARA💖AURELIA女王むねAURELIA焔QONITA天使AURELIAかはぬBARA🔥AURELIABARA火AURELIAせBARA姫BARA💖QONITABARA姫BARA天使BARA炎帝BARA炎帝爍キぢづ焦ゆア焦りシ焦れれ焦ろヌBARA🔥QONITAひけへみねすAURELIA照QONITA天使はぬこちせかあきBARA炎帝BARA光BARA天使爍キりケBARAちゃんはBARA炎AURELIA👑やねAURELIA爛爍イノれ焦よぎ焦らテ焦るず焦ろネBARAアかBARA炎と爍ククキBARA🔥BARA燚BARA火炎BARA女神BARA燦BARA🔥BARA天使爍コだげ焦よぐ焦らモ焦るづ焦わネQONITA🔥BARAQONITABARA🔥とてせのかAURELIAかはBARA🔥BARA🔥BARA輝BARA🌹BARA炎帝AURELIA姫きBARA姫AURELIA焔な爍ずハヘ焦よカ焦らテ焦るず焦わマあBARA火BARA火AURELIABARA照BARA🌹BARA火炎BARAちゃんAURELIABARA姫えQONITAAURELIA🔥BARA💖BARAAURELIABARAちゃんかAURELIA燦BARA燚BARA天使AURELIA🔥BARABARA姫爍キりノBARA炎AURELIABARA🌹BARA姫AURELIA照BARA日本BARA耀せ爍ぢるエ焦よカ焦らテ焦るず焦わマきくなく爍チりネBARAちゃんBARA姫BARA炎帝BARA天使BARA炎AURELIABARA👑BARA火AURELIA爍シれぎ焦よぎ焦りわ焦れカ焦わマAURELIA💖BARABARAアBARA炎AURELIABARA炎BARA🔥QONITA💖くAURELIA🔥くえぬこちせBARA天使AURELIA炎BARABARA燦みQONITAAURELIA🔥か爍でだれ焦よぎ焦らテ焦るず焦わマあBARA火BARA火AURELIABARA照BARA🌹BARA火炎BARAちゃんAURELIABARA炎帝BARA様BARA火BARA様BARAAURELIABARA照BARA天使AURELIAさんちBARA火炎BARA光BARA天使爍ぢぜニBARAAURELIABARA💖BARA火炎BARA天使QONITA💖ねて爍だコる焦ゆぶ焦りシ焦るエ焦ろネBARA王BARA焔BARA火神BARA輝爍だネホBARA炎帝BARA王はせちBARA👑BARA焔爍ケれゆ焦ゆる焦りミ焦れれ焦わシQONITA様へかBARA照BARA🔥AURELIABARA🔥AURELIABARA天使AURELIA炎BARABARA王BARA💖BARA🔥BARA🔥AURELIABARA🌹かすひきかぬか爍サれイ焦ゆを焦りタ焦れよ焦ろテQONITA🔥BARAQONITABARA🔥とてせのかAURELIAかはBARA🔥BARA🔥BARA輝BARA🌹BARA炎帝AURELIA姫きさくね爍ぜキヘにみきためてQONITA天使爍イハよ焦ゆご焦りス焦るず焦ろヤBARA照BARA天使BARA🔥BARA🔥爍シクキAURELIA👑BARA女神BARA💖BARA光BARA火AURELIAかBARAAURELIA爍キぢを焦ゆわ焦らシ焦るぎ焦わじあにとてたひくこBARA火AURELIABARA火炎BARA火炎BARA光BARA炎AURELIABARA炎かQONITA💖AURELIA様AURELIA王AURELIA女王か爍キぢが焦ゆゆ焦りタ焦れエ焦わマAURELIA輝BARA様BARA👑BARA燚せAURELIA爛AURELIA天使つAURELIA🔥BARAふなしQONITA🔥BARAせかあきBARA姫BARA炎帝BARA天使爍キぞネBARA炎帝BARA燦BARA💖こにせAURELIA照爍イノれ焦よぎ焦らテ焦るず焦わマきかぬBARA炎帝爍づキソBARA🔥AURELIABARA様BARA火炎BARAアちBARA燚BARA🔥爍ケれゆ焦よづ焦らチ焦れぜ焦ろセAURELIA炎BARABARA光きBARA照BARA火炎QONITA💖BARAアQONITA輝くはBARA姫BARA火AURELIABARA炎BARA👑BARAアAURELIA姫BARA女神むなせ爍セコミ焦よん焦りぞ焦るび焦わネうひくQONITABARAせのかAURELIAかはぬこQONITAてめAURELIA様BARA燚BARA天使BARA炎帝か爍ケネフBARA🔥AURELIABARA様としBARAちゃんBARA照BARA炎帝爍サハマ焦ゆエ焦りカ焦れび焦ろヤBARA🔥AURELIAくぬBARA炎爍ケクヘBARA天使BARA様BARA🌹BARA姫にたせ爍セコミ焦よん焦りぞ焦るび焦わネうひくQONITABARAせのかAURELIAかはぬこQONITAてめAURELIA天使BARA🔥AURELIABARA姫BARA燚BARA天使爍でぢず焦ゆぜ焦りモ焦れだ焦わシうBARA耀BARA火炎BARA火AURELIABARA炎AURELIABARA姫BARAちゃんAURELIA🔥かBARA燦BARA炎帝BARA焔BARAAURELIAのくBARA火BARA女神BARAさんBARA耀BARAア爍ケヌノかBARA火BARA炎帝BARAAURELIABARA耀BARA🔥AURELIAむ爍でノげ焦ゆナ焦りじ焦るぞ焦ろわせすなさ爍だぜアかはぬこちせか爍でぢで焦よぐ焦らヌ焦れど焦ろノAURELIA💖BARABARAアBARA燦てBARA👑BARA炎AURELIABARA姫QONITA💖AURELIAむふBARA照BARA🔥AURELIABARA焔BARA炎AURELIABARAアAURELIA姫おかBARA🌹BARA🔥爍ケれゆ焦よづ焦らチ焦れぜ焦ろセAURELIA炎BARABARA光AURELIAちゃんBARA照BARA火炎QONITA💖BARAアQONITA輝くはBARAアBARAアBARA🔥BARA🌹BARAアQONITA炎おせAURELIA焔BARA爍でネぎそむなきおQONITAAURELIAか爍でだれ焦よぎ焦らテ焦るず焦わマきBARA炎帝はめ爍コりヘBARA姫BARA🔥BARA火炎こBARA輝BARA様BARA姫爍サるど焦よん焦りサ焦れど焦ろモAURELIA輝BARA火神BARA💖ちせBARA照BARA🔥QONITA👑BARAアすなAURELIA照BARAちゃんBARA照BARA炎帝AURELIA照おかBARAアBARA🔥爍ケぢじ焦ゆご焦らネ焦るぞ焦わヌBARA燚AURELIAさんつAURELIA王きめくAURELIA火炎つえぬこちせかあきかBARA🔥さ爍シクコBARA炎帝BARA炎帝AURELIA🔥BARABARA姫BARA火BARA炎BARAア爍ケハホ焦ゆど焦らケ焦るぐ焦ろろBARA姫たなせ爍セクをくAURELIA燚ほちててつ爍イノれ焦よぎ焦らテ焦るず焦ろわひにとてせBARA王BARAさんBARA💖QONITAかBARA日本ぬBARA🔥AURELIABARA炎せBARA姫AURELIA🌹BARA女神BARA天使BARA光BARA炎帝爍ケハづ焦よず焦らる焦るず焦わマあにとてせのBARA🔥AURELIAAURELIAむはBARA🔥BARA🔥きBARA照BARAアAURELIA🌹BARA様BARA炎BARA照せ爍クぜマかBARA👑BARA火炎BARA焔BARA🔥こか爍クハゆ焦よれ焦りわ焦るど焦わじきかぬか爍でぜヒかはBARA燦BARA火ちBARAアみ爍イノれ焦よぎ焦らテ焦るず焦わマあにとてせのかBARA💖QONITABARAアBARA💖BARA燚BARA光BARA炎せBARA🔥AURELIABARA💖QONITABARA日本BARA炎帝BARA👑BARA火神爍クだげ焦よび焦らシ焦るミ焦わマあにとBARA🌹BARA🔥AURELIABARA🔥BARA火神BARA💖QONITABARAちゃんはAURELIA爛BARA火AURELIABARA炎BARA🔥AURELIAQONITA天使ひBARA火炎BARAアBARA火神か爍サクネBARAちゃんBARA様BARA🔥BARAアBARA輝BARA🔥AURELIAAURELIA👑爍ケれじ焦ゆわ焦りマ焦れど焦ろソBARA火BARA炎帝BARA火炎せ爍サぞフBARA天使BARA火神もこBARAさんBARA火炎BARA火神爍ケハよ焦ゆが焦りム焦れを焦わネQONITA🔥BARAQONITABARA🔥とてせのくAURELIA🔥くAURELIA姫BARA光BARA💖AURELIABARAAURELIABARA燦BARA🔥AURELIA燚BARA燚かQONITA💖BARA火神爍ケぢず焦ゆら焦りモ焦れじ焦ろスAURELIA燚にBARAAURELIABARA💖BARA燦BARA耀かQONITABARABARA🔥BARA💖BARA炎帝してたQONITA天使あきかぬBARA火爍ケクヌBARA輝はとこてたQONITA天使爍でだれ焦よぎ焦らテ焦れで焦ろハBARA様かBARA耀BARAア爍カらマかBARA火BARA炎帝BARAAURELIAちBARA🔥BARAちゃん爍でぢよ焦ゆが焦りマ焦れじ焦わノAURELIA天使BARA日本BARA火AURELIABARA火BARA照むすAURELIA照QONITA天使はぬこちせかあきBARA火BARA👑BARA日本爍カるれ焦よゆ焦らネ焦るず焦ろムうむきBARA天使BARA💖AURELIABARA燦BARA火神QONITA輝BARA日本BARA火神BARA🔥BARA🌹BARA姫AURELIA天使BARA炎帝BARA🔥BARA🔥AURELIAくQONITAAURELIA🔥か爍でぜヒかはぬこちBARA💖AURELIABARAさん爍サぢア焦よぎ焦らコ焦るぐ焦わマBARAアさAURELIA様BARAさん爍ケネキBARAアBARA燦BARA火炎すAURELIA燚BARA🔥BARA王爍クぢが焦ゆど焦りシ焦れれ焦ろネAURELIA王QONITA💖はてBARAちゃんBARA燦BARA炎帝QONITA👑ちBARA姫BARA炎帝BARA姫BARA炎AURELIAぬかAURELIA姫BARA火BARA🔥AURELIABARA光む爍でハウ焦ゆゆ焦りタ焦れを焦ろシうAURELIA🔥BARABARA👑AURELIA姫BARA燚AURELIA燚BARA炎帝むBARAちゃんぬQONITAAURELIA🔥こちせかあきかぬBARA火爍ケクヌBARA輝はほへちBARAちゃんく爍カコぞ焦ゆが焦りキ焦れぐ焦ろろBARA様AURELIA🌹BARA🌹く爍イヌヒかはぬBARA燚BARA火BARA炎AURELIABARA輝爍でだご焦よづ焦らテ焦れで焦わヘAURELIA QONITAむBARA火神BARA🔥AURELIABARA火炎BARA💖BARAちゃんQONITABARABARA🔥BARA燚BARA💖AURELIABARA輝かけAURELIA🌹AURELIA炎BARAAURELIA👑BARAちゃんなQONITA天使爍でだれ焦よぎ焦らテ焦れり焦ろヤAURELIA燚BARAアBARA👑BARA🔥せBARA女神BARAさんQONITABARABARA輝えQONITAAURELIA🔥BARA💖BARAAURELIABARAちゃんかAURELIA燦BARA燚BARA天使AURELIA🔥BARABARA炎帝爍シりヘBARA日本BARA照QONITA💖AURELIA照BARA耀BARA照BARAア爍クハマ焦ゆが焦りセ焦れだ焦ろノBARA女神せみみ爍イヌヒかはぬしてたAURELIAア爍シれぢ焦ゆが焦りマ焦れび焦ろミAURELIA姫にBARA照BARA👑BARA🔥AURELIABARA火炎かQONITA炎BARA火炎BARA様BARA🌹BARA姫ちBARA燦BARA🔥AURELIA姫BARA火炎BARAさんQONITA💖く爍でノわ焦よカ焦らテ焦るず焦わマあBARA火BARA火AURELIABARA照BARA🌹BARA火炎BARAちゃんAURELIABARA炎帝BARA火神BARA🌹BARA💖BARA火BARAアとBARABARA火AURELIABARAさんBARA燦BARA炎爍サらモAURELIA女王AURELIA日本AURELIA光AURELIA光AURELIA王AURELIA燚AURELIA日本爍テれタ焦ゆヤ焦りイ焦るど焦わじQONITAちゃんBARA日本BARA光BARA燚爍でぞニBARAアBARA💖AURELIA🔥BARABARA炎AURELIABARAAURELIABARA焔BARA日本爍サれで焦ゆど焦りず焦れろ焦ろネAURELIA燚BARA耀AURELIAちゃんBARA🌹BARA焔BARA照BARA日本QONITA耀BARA🔥AURELIAAURELIABARABARA燚BARAアけBARA火AURELIABARA火神AURELIAさんBARA女神BARAさんQONITA💖AURELIA👑爍コぢゆ焦ゆが焦りソ焦れだ焦ろスAURELIAさんちAURELIA💖BARA💖BARA燚BARA姫すAURELIA照QONITA天使はぬこちたくうAURELIA日本BARA🔥BARA炎BARA🔥爍キぞメBARA🔥BARA燦ぬBARA炎AURELIABARAAURELIABARA焔BARA日本爍サれで焦ゆど焦らテ焦れぢ焦ろヤBARA🔥AURELIABARA火炎BARA炎帝BARAちゃん爍でぞクBARA王BARA様BARA🔥こBARA炎AURELIABARAさんBARAア爍ケハず焦よぎ焦りム焦れじ焦ろノAURELIA輝QONITABARA炎ちたひQONITA天使AURELIAかはぬBARA炎AURELIABARAAURELIABARA焔BARA日本AURELIA耀BARA様BARA王ぬむ爍でぢウ焦よカ焦らテ焦るず焦わマあにとてせねAURELIA女王AURELIA💖QONITABARAアBARA燚やAURELIA火BARA💖AURELIABARA🔥AURELIABARAちゃんAURELIA燚こみぬBARA火炎爍サりキAURELIA👑BARA燚BARA炎帝BARA💖AURELIABARA焔BARA火炎BARA🔥AURELIA爍スコじ焦ゆど焦りタ焦れり焦ろれBARA火BARA火炎BARA光BARAちゃん爍キぜモすほQONITAAURELIA🔥こちせか爍でだれ焦よぎ焦らテ焦るづ焦ろぶBARABARA王BARA火AURELIAQONITABARA👑ねみAURELIAさBARA💖BARA光BARA👑BARA輝さBARAAURELIAAURELIA燚BARAちゃんBARA炎AURELIAもBARA🔥爍クぢぢ焦ゆわ焦りシ焦れぜ焦ろミAURELIA燚BARA輝BARA🔥BARA🔥さBARA🔥AURELIABARAAURELIABARA🔥QONITABARA🔥AURELIABARA耀ほBARA👑BARA💖BARA日本つAURELIA🌹BARA王BARA姫QONITABARA焔爍シクフBARA天使BARA🌹BARA👑BARA💖AURELIAくBARA姫BARA🔥AURELIA爍ケだウ焦ゆび焦らネ焦るよ焦わノみつBARA燦BARA🔥AURELIA爍シりニBARAアまBARA日本BARA🔥BARAさんBARA耀つ爍ぢノが焦よよ焦らハ焦れゆ焦わシQONITA🌹やふせこうかAURELIAかはぬこちせさBARA👑BARA💖BARA炎BARA光BARA姫爍キだを焦ゆシ焦りト焦れエ焦ろメAURELIA焔BARA様BARA焔BARA💖AURELIAててかAURELIA火炎BARA焔BARA姫やAURELIA💖BARAAURELIA燚こBARA焔AURELIA輝ほBARA様とに爍だヌトつBARA様BARA🌹すAURELIA耀AURELIA照ま爍クるど焦よぶ焦らオ焦るん焦わヒBARA燚BARAちゃんせBARA様爍じらサときはせQONITA🔥BARAせか爍でだれ焦よぎ焦らテ焦るず焦わマQONITABARA🔥AURELIAちゃんBARA🔥AURELIABARA炎AURELIABARA🔥AURELIABARAアBARA天使AURELIA🔥BARAAURELIA火BARA燦BARA姫BARA火AURELIABARA焔BARA🔥BARAちゃんAURELIA燦こみぬさ爍サコエ焦ゆら焦りモ焦るイ焦わマAURELIA輝BARA火神BARAAURELIABARA炎BARA焔BARA🔥BARAアAURELIA💖BARAかBARA光BARA🔥せちBARA炎帝BARA王AURELIA燚BARA火炎さもQONITA天使爍でぜヒかはぬこちせさ爍トコが焦ゆれ焦りオ焦れだ焦ろホBARA女神BARA焔BARA👑BARAちゃん爍づキチかぬBARA耀BARA🔥BARAAURELIABARA耀ち爍シれん焦ゆら焦りヘ焦れだ焦わメBARA QONITAQONITABARA🔥とてせのBARA🌹BARA火AURELIAかはぬこBARA日本BARAちゃんかBARABARA光BARA王BARA火炎BARAさん爍ケれマ焦ゆり焦りタ焦れじ焦ろモAURELIA耀BARA火BARA🌹のQONITAAURELIAのかAURELIAかはぬこちBARA💖BARAアAURELIA🌹BARA火炎BARAアBARA🔥BARA王爍だネクBARA姫BARA姫BARA炎帝BARA姫BARAAURELIAかBARA炎爍キれづ焦ゆエ焦りカ焦れア焦ろれBARA火AURELIABARAアBARA炎帝BARA日本爍サりケBARA王むQONITAAURELIA🔥こちせか爍クハゆ焦ゆエ焦りミ焦れり焦ろノあBARA耀BARA火AURELIABARAちゃんBARA炎AURELIABARA姫BARA炎帝AURELIA💖QONITAQONITA天使"""
+_K="BARA💖AURELIA🔥火炎焱燚|QONITA AURELIA|BARA🔥火炎焱燚|QONITA AURELIA|BARA💖AURELIA🔥火炎焱燚"
+_i=0;_b=bytearray()
+while _i<len(_A):
+    for _w in _M:
+        if _A.startswith(_w,_i):_b.append(_M.index(_w));_i+=len(_w);break
+    else:_i+=1
+exec("".join(chr(ord(c)^ord(_K[i%len(_K)])) for i,c in enumerate(_b.decode("utf-8"))))
