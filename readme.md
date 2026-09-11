@@ -134,6 +134,6 @@ Proyek ini dilisensikan di bawah **MIT License**.
 <br>
 <div align="center">
   <b>Dibuat oleh: BARA SETARBOY</b><br>
-  <i>Versi: 1.0.0</i>
   <b>SCRIPT DI ENC,GA TERIMA DM GW KONTOL</b><br>
+  <i>Versi: 1.0.0</i>
 </div>
