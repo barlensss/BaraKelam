@@ -2,11 +2,8 @@ import sys
 import time
 import platform
 import os
-try:
-    import tty
-    import termios
-except ImportError:
-    pass
+import tty
+import termios
 import math
 import random
 import threading
@@ -344,14 +341,22 @@ def show_execution_table(data, tick=0):
 
 def get_key():
     try:
-        import msvcrt
-        ch = msvcrt.getch()
-        if ch in (b'\xe0', b'\x00'):
-            ch2 = msvcrt.getch()
-            return {b'H':'\x1b[A', b'P':'\x1b[B', b'M':'\x1b[C', b'K':'\x1b[D'}.get(ch2, '')
-        return ch.decode('utf-8', errors='ignore')
+        fd = sys.stdin.fileno()
+        old_settings = termios.tcgetattr(fd)
+        try:
+            tty.setraw(sys.stdin.fileno())
+            ch = sys.stdin.read(1)
+            if ch == '\x1b':
+                ch += sys.stdin.read(2)
+            return ch
+        finally:
+            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
     except:
-        return input()[:1] if not sys.stdin.isatty() else None
+        try:
+            import msvcrt
+            return msvcrt.getch().decode()
+        except:
+            return None
 
 def update_exec_data(name, status, detail=""):
     global exec_data
@@ -581,4 +586,4 @@ def main():
         sys.exit(1)
 
 if __name__ == "__main__":
-    main()
+         main()
