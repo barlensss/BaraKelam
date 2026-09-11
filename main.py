@@ -16,7 +16,7 @@ from main_engine import run_single_round, run_infinite_loop
 init(autoreset=True)
 
 VERSION = "1.0.0"
-TOOLS_NAME = "ARLEN -OTP"
+TOOLS_NAME = "BARA HATERS  ELIA 😂"
 
 exec_data = {
     'target': '',
@@ -220,7 +220,7 @@ def print_banner(tick=0):
   └──────────────────────────────────────────────────────┘
 
   ┌──────────────────────────────────────────────────────┐
-  │  {color}API{reset}  : 24  │  {color}Version{reset}  : 1.0.0  │  {color}Developer{reset}  : Bara     │
+  │  {color}API{reset}  : 24  │  {color}Version{reset}  : 1.0.0  │  {color}Developer{reset} : Bara   │
   └──────────────────────────────────────────────────────┘{reset}
 """
     print(banner)
@@ -579,7 +579,7 @@ def main():
     except KeyboardInterrupt:
         print(f"\n\n{Fore.CYAN}◐ {Fore.WHITE}Keluar...{Style.RESET_ALL}")
         time.sleep(0.5)
-        print(f"{Fore.GREEN}✓ Sampai jumpa! 👋{Style.RESET_ALL}")
+        print(f"{Fore.GREEN}✓ Byee Anak Puqi 😂👋{Style.RESET_ALL}")
         sys.exit(0)
     except Exception as e:
         print(f"\n{Fore.RED}✗ Error: {e}{Style.RESET_ALL}")
