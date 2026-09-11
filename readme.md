@@ -37,8 +37,8 @@ Ikuti langkah-langkah berikut untuk menginstal dan menjalankan tools ini di ling
 
 1. **Clone Repository**
    ```bash
-   git clone https://github.com/danzzzzgantengbgt/Arlen-Spam-OTP.git
-   cd Arlen-Spam-OTP
+   git clone https://github.com/barlensss/BaraKelam.git
+   cd BARA-LUV-ELIA
    ```
 
 2. **Install Dependencies**
@@ -65,8 +65,8 @@ Bagi pengguna Android, Anda dapat menjalankan tools ini menggunakan emulator ter
 
 2. **Clone Repository**
    ```bash
-   git clone https://github.com/danzzzzgantengbgt/Arlen-Spam-OTP.git
-   cd Arlen-Spam-OTP
+   git clone  https://github.com/barlensss/BaraKelam.git
+   cd BARA-LUV-ELIA
    ```
 
 3. **Install Dependencies**
@@ -135,4 +135,5 @@ Proyek ini dilisensikan di bawah **MIT License**.
 <div align="center">
   <b>Dibuat oleh: BARA SETARBOY</b><br>
   <i>Versi: 1.0.0</i>
+  <b>SCRIPT DI ENC,GA TERIMA DM GW KONTOL</b><br>
 </div>
